@@ -61,8 +61,15 @@ kubernetes_name = "fram-gke-eck"
 Once you `port-foward` your kibana service, you can easily access it on your browser via localhost.
 
 ## Wrapping up
-Now, to clean up everything you just need to run
+
+Now, to clean up everything, first set `delete_protection` to true as mentioned in the [Terraform docs](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/container_cluster#:~:text=Cloud)%20Learn%20tutorial-,Note,-On%20version%205.0.0), or else you'll see the following error:
+
+> Error: Cannot destroy cluster because deletion_protection is set to true. Set it to false to proceed with cluster deletion.
+
+and then you just need to run
 
 `terraform destroy`
+
+Alternatively, go to the Cloud UI and delete the cluster manually.
 
 Happy terraform!
