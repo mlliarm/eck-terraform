@@ -19,7 +19,7 @@ resource "google_container_node_pool" "node-pool" {
 
   node_config {
     preemptible  = false
-    machine_type = "e2-standard-4"
+    machine_type = "e2-standard-4" # 4 vCPU, 16 GB memory
   }
 }
 
@@ -78,14 +78,35 @@ resource "kubectl_manifest" "elastic_quickstart" {
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
-  name: quickstart
+  name: es8181
 spec:
-  version: 8.1.3
+  version: 8.18.1
   nodeSets:
-  - name: default
-    count: 3
-    config:
+  - config:
+      node.roles:
+      - master
+      - data
+      - ingest
       node.store.allow_mmap: false
+    count: 1
+    name: default
+  - config:
+      node.roles:
+      - ml
+      node.store.allow_mmap: false
+      xpack.ml.enabled: true
+      xpack.ml.max_model_memory_limit: 6Gb
+    count: 1
+    name: ml
+    podTemplate:
+      spec:
+        containers:
+        - name: elasticsearch
+          resources:
+            limits:
+              memory: 6Gi
+            requests:
+              memory: 6Gi
 YAML
 
   provisioner "local-exec" {
@@ -100,12 +121,12 @@ resource "kubectl_manifest" "kibana_quickstart" {
 apiVersion: kibana.k8s.elastic.co/v1
 kind: Kibana
 metadata:
-  name: quickstart
+  name: kibana8151
 spec:
-  version: 8.1.3
+  version: 8.18.1
   count: 1
   elasticsearchRef:
-    name: quickstart
+    name: es8181
 YAML
 
   provisioner "local-exec" {
