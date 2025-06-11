@@ -2,17 +2,17 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "4.18.0"
+      version = "6.39.0"
     }
     kubernetes = {
-      source  = "hashicorp/helm"
-      version = "2.5.1"
+      source  = "hashicorp/google"
+      version = "3.0.0-pre2"
       source  = "hashicorp/kubernetes"
-      version = ">= 2.10.0"
+      version = ">= 2.37.1"
     }
     kubectl = {
       source  = "gavinbunney/kubectl"
-      version = "= 1.14.0"
+      version = "= 1.19.0"
     }
   }
 }
